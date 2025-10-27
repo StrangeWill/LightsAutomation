@@ -5,3 +5,8 @@ services:
     build: .
     restart: always
     privileged: true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./files:/files

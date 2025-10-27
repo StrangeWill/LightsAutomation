@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
 WORKDIR /app
 EXPOSE 80
@@ -21,7 +21,7 @@ ENV ASPNETCORE_URLS=http://+:80
 #RUN npm ci
 #RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS publish
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS publish
 WORKDIR /src
 COPY . .
 WORKDIR "/src/Lights.Web"
@@ -31,4 +31,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 #COPY --from=vuebuild /src/Lights.Web/wwwroot wwwroot
+RUN rm /app/appsettings.local.json
 ENTRYPOINT ["dotnet", "Lights.Web.dll"]

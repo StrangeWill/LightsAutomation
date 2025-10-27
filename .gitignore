@@ -1,6 +1,8 @@
 node_modules
 wwwroot/
+files/
 *.mid
+appsettings.local.json
 
 # User-specific files
 *.rsuser

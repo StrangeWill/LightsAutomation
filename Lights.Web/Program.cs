@@ -1,4 +1,5 @@
 using Lights.Web.AddHostedService;
+using Lights.Web.Services;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Rewrite;
 
@@ -23,7 +24,10 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles)
     .Services
-    .AddHostedService<LightService>();
+    .AddSwaggerGen()
+    .AddSingleton<LightService>()
+    .AddSingleton<FileService>()
+    .AddHostedService(provider => provider.GetRequiredService<LightService>());
 
 var routes = string.Join('|', new[] { "" });
 var options = new RewriteOptions()
@@ -32,8 +36,6 @@ var options = new RewriteOptions()
 var app = builder.Build();
 app
     .UseForwardedHeaders()
-    .UseHttpsRedirection()
-    .UseRewriter(options)
     .UseDefaultFiles()
     .UseStaticFiles(new StaticFileOptions
     {
@@ -50,6 +52,9 @@ app
             }
         }
     })
+    .UseSwagger()
+    .UseSwaggerUI()
+    //.UseRewriter(options)
     .UseRouting()
     .UseCors()
     .UseAuthentication()
